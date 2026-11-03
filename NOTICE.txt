@@ -1,0 +1,2 @@
+Independent, unofficial OpenWrt project. Not affiliated with or endorsed by Windscribe.
+The package currently contains original diagnostic integration code only. Any future reuse of Windscribe source components must preserve their applicable licenses and notices. Review the license of each upstream component before redistribution.

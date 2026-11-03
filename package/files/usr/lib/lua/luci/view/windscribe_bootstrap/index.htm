@@ -1,0 +1,10 @@
+<%+header%>
+<% local sys = require "luci.sys"; local report = sys.exec("/usr/bin/windscribe-preflight 2>&1") or "Diagnostics unavailable" %>
+<h2>Windscribe for OpenWrt</h2>
+<div class="alert-message warning">
+  <p><strong>Foundation package 0.3.0</strong></p>
+  <p>This is a read-only diagnostics package, not a VPN client. Windscribe login, API integration, server discovery, protocol selection and tunnel management are not implemented.</p>
+  <p>It does not change firewall rules, routes, DNS, PassWall2 or existing VPN configurations.</p>
+</div>
+<div class="cbi-map"><h3>Router diagnostics</h3><pre style="white-space:pre-wrap;overflow-wrap:anywhere"><%=pcdata(report)%></pre></div>
+<%+footer%>

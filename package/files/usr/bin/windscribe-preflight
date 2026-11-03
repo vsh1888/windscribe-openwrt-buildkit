@@ -1,0 +1,40 @@
+#!/bin/sh
+# Read-only diagnostic command. Does not alter network, firewall, DNS or VPN state.
+set -u
+have() { command -v "$1" >/dev/null 2>&1; }
+module_state() {
+    if grep -q "^$1 " /proc/modules 2>/dev/null; then echo LOADED
+    elif [ -e "/lib/modules/$(uname -r)/$1.ko" ]; then echo PRESENT_NOT_LOADED
+    else echo NOT_DETECTED; fi
+}
+section() { printf '\n===== %s =====\n' "$1"; }
+item() { printf '%-28s %s\n' "$1" "$2"; }
+section 'WINDSCRIBE OPENWRT FOUNDATION'
+item 'Package:' '0.3.1-r1'
+item 'Role:' 'READ-ONLY DIAGNOSTICS ONLY'
+item 'Windscribe authentication:' 'NOT IMPLEMENTED'
+item 'Windscribe API adapter:' 'NOT IMPLEMENTED'
+item 'VPN tunnel manager:' 'NOT IMPLEMENTED'
+item 'Network changes:' 'NONE'
+section 'PLATFORM'
+if [ -r /etc/openwrt_release ]; then . /etc/openwrt_release; fi
+item 'Release:' "${DISTRIB_RELEASE:-unknown}"
+item 'Target:' "${DISTRIB_TARGET:-unknown}"
+item 'Architecture:' "${DISTRIB_ARCH:-unknown}"
+item 'Kernel:' "$(uname -r 2>/dev/null || echo unknown)"
+section 'TUNNEL TOOLS'
+for cmd in awg wg openvpn stunnel swanctl wstunnel; do
+    if have "$cmd"; then item "$cmd" "$(command -v "$cmd")"; else item "$cmd" 'NOT INSTALLED'; fi
+done
+section 'KERNEL MODULES'
+for mod in amneziawg wireguard ovpn xfrm_user; do item "$mod" "$(module_state "$mod")"; done
+section 'WINDscribe FEATURES'
+item 'Dynamic server list:' 'NOT IMPLEMENTED'
+item 'Automatic protocol selection:' 'NOT IMPLEMENTED'
+item 'AmneziaWG profile retrieval:' 'NOT IMPLEMENTED'
+item 'OpenVPN UDP/TCP:' 'NOT MANAGED BY THIS PACKAGE'
+item 'Stealth / WStunnel:' 'NOT MANAGED BY THIS PACKAGE'
+item 'Kill switch / split routing:' 'NOT IMPLEMENTED'
+section 'SAFETY'
+item 'PassWall2:' 'NOT MODIFIED'
+item 'Firewall / routes / DNS:' 'NOT MODIFIED'

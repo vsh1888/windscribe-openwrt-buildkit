@@ -1,0 +1,4 @@
+Windscribe OpenWrt Foundation 0.3.1
+Status: diagnostics-only; not a VPN client.
+No credentials are requested or stored.
+No routes, firewall rules, DNS settings, PassWall2 settings or VPN interfaces are modified.
